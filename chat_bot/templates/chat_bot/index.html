@@ -1,0 +1,41 @@
+<!-- myapp/templates/chat.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load 'static' %}
+    <link rel="stylesheet" href="{% static 'chat_bot/style.css' %}">
+    <title>Chat</title>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-display"></div>
+        <form id="chat-form" method="post">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#chat-form').on('submit', function(event) {
+                event.preventDefault();
+                var message = $('#user-input').val();
+                $('#chat-display').append('<div>You: ' + message + '</div>');
+                $('#user-input').val('');
+
+                $.ajax({
+                    url: '/',
+                    method: 'POST',
+                    data: { message: message },
+                    success: function(data) {
+                        $('#chat-display').append('<div>Bot: ' + data.response + '</div>');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
